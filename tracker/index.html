@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bus GPS Tracker</title>
+</head>
+<body>
+  <h2>Bus Tracking Enabled</h2>
+  <p>Sending live location every 5 seconds...</p>
+
+  <!-- Firebase -->
+  <script type="module" src="../firebase.js"></script>
+
+  <script>
+    const busId = "BUS_101";  // Customize bus ID
+
+    function sendLocation() {
+      navigator.geolocation.getCurrentPosition(pos => {
+        const { latitude, longitude } = pos.coords;
+
+        window.dbSet(
+          window.dbRef(window.db, "buses/" + busId),
+          { lat: latitude, lon: longitude, time: Date.now() }
+        );
+
+      }, err => {
+        console.log("GPS Error", err);
+      });
+    }
+
+    setInterval(sendLocation, 5000);
+  </script>
+</body>
+</html>

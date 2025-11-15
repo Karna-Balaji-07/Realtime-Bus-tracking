@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Live Bus Tracking</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map { height: 100vh; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script type="module" src="../firebase.js"></script>
+
+  <script>
+    const map = L.map("map").setView([20.5937, 78.9629], 5);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+    const busMarkers = {};
+
+    window.dbOn(window.dbRef(window.db, "buses"), snapshot => {
+      const buses = snapshot.val();
+
+      for (let id in buses) {
+        const bus = buses[id];
+
+        if (!busMarkers[id]) {
+          busMarkers[id] = L.marker([bus.lat, bus.lon]).addTo(map)
+            .bindPopup(`Bus: ${id}`);
+        } else {
+          busMarkers[id].setLatLng([bus.lat, bus.lon]);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
