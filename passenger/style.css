@@ -1,0 +1,108 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #2E3192, #1BFFFF);
+  padding: 0;
+  margin: 0;
+  color: #fff;
+}
+
+.container {
+  max-width: 900px;
+  margin: 50px auto;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 40px;
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+.title {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+.search-bar {
+  display: flex;
+  gap: 10px;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  font-size: 17px;
+}
+
+.search-btn {
+  padding: 14px 25px;
+  border: none;
+  background: #ffdd00;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.search-btn:hover {
+  background: #ffd600;
+  transform: scale(1.05);
+}
+
+.results {
+  margin-top: 30px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.25);
+  padding: 20px 25px;
+  margin-bottom: 20px;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: scale(1.02);
+  background: rgba(255, 255, 255, 0.30);
+}
+
+.card-title {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.card-details {
+  margin-top: 5px;
+  font-size: 16px;
+  line-height: 1.7em;
+}
+
+.track-btn {
+  margin-top: 10px;
+  background: #00ffea;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.track-btn:hover {
+  background: #00e3cc;
+}
+
+.no-results {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 18px;
+}
+.no-results img {
+  width: 200px;
+  margin-top: 15px;
+}
+.no-results p {
+  margin-top: 10px;
+  font-size: 16px;
+}

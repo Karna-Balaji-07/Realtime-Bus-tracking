@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Find & Track Buses</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <h2 class="title">🔍 Find Buses & Track Live</h2>
+
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search by Bus No, Route, or Stop Name...">
+    <button class="search-btn" onclick="searchBus()">Search</button>
+  </div>
+
+  <div class="results" id="results"></div>
+</div>
+
+<script>
+// SAMPLE BUS DATA
+const buses = [
+  {
+    id: "BUS_101",
+    name: "City Line Express 101",
+    route: "Central Bus Stand → Lake Road → Market → Tech Park",
+    stops: ["Central Bus Stand", "Lake Road", "Old Market", "Tech Park"],
+    arrival: "10:15 AM",
+    departure: "10:20 AM"
+  },
+  {
+    id: "BUS_202",
+    name: "Green Metro 202",
+    route: "Railway Station → Hospital → University → Airport",
+    stops: ["Railway Station", "City Hospital", "University Gate", "Airport"],
+    arrival: "09:40 AM",
+    departure: "09:45 AM"
+  },
+  {
+    id: "BUS_303",
+    name: "Suburban Shuttle 303",
+    route: "Village Road → Temple Circle → Market → Bus Stand",
+    stops: ["Village Road", "Temple Circle", "Old Market", "Main Bus Stand"],
+    arrival: "11:10 AM",
+    departure: "11:15 AM"
+  }
+];
+
+function searchBus() {
+  const query = document.getElementById("searchInput").value.toLowerCase();
+  const resultsDiv = document.getElementById("results");
+
+  const matched = buses.filter(bus =>
+    bus.id.toLowerCase().includes(query) ||
+    bus.name.toLowerCase().includes(query) ||
+    bus.route.toLowerCase().includes(query) ||
+    bus.stops.some(stop => stop.toLowerCase().includes(query))
+  );
+
+  resultsDiv.innerHTML = "";
+
+  if (matched.length === 0) {
+    resultsDiv.innerHTML = `<div class="no-results">❌ No matching buses found.</div>`;
+    return;
+  }
+
+  matched.forEach(bus => {
+    const card = `
+      <div class="card">
+        <div class="card-title">${bus.name}</div>
+        <div class="card-details">
+          <strong>Route:</strong> ${bus.route}<br>
+          <strong>Arrival Time:</strong> ${bus.arrival}<br>
+          <strong>Departure Time:</strong> ${bus.departure}<br>
+          <strong>Stops:</strong> ${bus.stops.join(", ")}
+        </div>
+        <a href="index.html?bus=${bus.id}">
+          <button class="track-btn">Track Live Location</button>
+        </a>
+      </div>
+    `;
+    resultsDiv.innerHTML += card;
+  });
+}
+</script>
+
+</body>
+</html>
