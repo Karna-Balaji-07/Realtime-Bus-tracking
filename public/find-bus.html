@@ -21,7 +21,7 @@
 // SAMPLE BUS DATA
 const buses = [
   {
-    id: "BUS_101",
+    id: "BUS-101",
     name: "City Line Express 101",
     route: "Central Bus Stand → Lake Road → Market → Tech Park",
     stops: ["Central Bus Stand", "Lake Road", "Old Market", "Tech Park"],
@@ -29,7 +29,7 @@ const buses = [
     departure: "10:20 AM"
   },
   {
-    id: "BUS_202",
+    id: "BUS-202",
     name: "Green Metro 202",
     route: "Railway Station → Hospital → University → Airport",
     stops: ["Railway Station", "City Hospital", "University Gate", "Airport"],
@@ -37,7 +37,7 @@ const buses = [
     departure: "09:45 AM"
   },
   {
-    id: "BUS_303",
+    id: "BUS-303",
     name: "Suburban Shuttle 303",
     route: "Village Road → Temple Circle → Market → Bus Stand",
     stops: ["Village Road", "Temple Circle", "Old Market", "Main Bus Stand"],
@@ -74,7 +74,7 @@ function searchBus() {
           <strong>Departure Time:</strong> ${bus.departure}<br>
           <strong>Stops:</strong> ${bus.stops.join(", ")}
         </div>
-        <a href="index.html?bus=${bus.id}">
+        <a href="./index.html?bus=${bus.id}">
           <button class="track-btn">Track Live Location</button>
         </a>
       </div>
