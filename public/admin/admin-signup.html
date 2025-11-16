@@ -17,27 +17,38 @@
       <label for="signup-password">Password</label>
     </div>
     <div class="btn-group">
-      <button class="btn" onclick="signup()">Sign Up</button>
+      <button class="btn" id="signup-btn">Sign Up</button>
     </div>
   </div>
 
   <script type="module">
     import { auth } from '../firebase.js';
     import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
+    import { ref, set } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
 
-    window.signup = () => {
+    document.getElementById("signup-btn").addEventListener("click", () => {
+
       const email = document.getElementById("signup-email").value;
       const password = document.getElementById("signup-password").value;
+
       createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-        console.log("Signup successful:", userCredential.user);
-        window.location.href = "./admin-dashboard.html"; // ✅ Adjust path if needed
+      .then((userCredential) => {
+          const user = userCredential.user;
+  
+          // store user in database
+          set(ref(db, "admins/" + user.uid), {
+              email: email,
+              createdAt: new Date().toISOString()
+          });
+  
+          alert("Account created!");
+          window.location.href = "./admin-dashboard.html";   // REDIRECT
       })
       .catch(err => {
-        console.error("Signup error:", err);
-        alert("Error: " + err.message);
+          alert("Error: " + err.message);
       });
-    };
+   });
+
 
   </script>
 </body>
