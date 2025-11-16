@@ -1,19 +1,53 @@
 {
   "buses": {
-    "BUS_101": {"id":"BUS_101","lat":12.9716,"lon":77.5946,"time":1690000000000,"speed":12,"routeId":"R1"},
-    "BUS_202": {"id":"BUS_202","lat":12.9750,"lon":77.6000,"time":1690000000000,"speed":9,"routeId":"R2"}
+    "BUS-101": {
+      "id": "BUS-101",
+      "lat": 12.9716,
+      "lon": 77.5946,
+      "time": 1690000000000,
+      "speed": 12,
+      "routeId": "R1"
+    },
+    "BUS-202": {
+      "id": "BUS-202",
+      "lat": 12.975,
+      "lon": 77.6,
+      "time": 1690000000000,
+      "speed": 9,
+      "routeId": "R2"
+    }
   },
   "routes": {
     "R1": {
-      "id":"R1","name":"Central → TechPark",
-      "path":[[12.970,77.590],[12.972,77.594],[12.976,77.600]],
-      "stops":[{"name":"Central","lat":12.970,"lon":77.590,"offsetSec":0},{"name":"Market","lat":12.972,"lon":77.594,"offsetSec":300},{"name":"TechPark","lat":12.976,"lon":77.600,"offsetSec":900}]
+      "id": "R1",
+      "name": "Central → TechPark",
+      "path": [
+        [12.97, 77.59],
+        [12.972, 77.594],
+        [12.976, 77.6]
+      ],
+      "stops": [
+        { "name": "Central", "lat": 12.97, "lon": 77.59, "offsetSec": 0 },
+        { "name": "Market", "lat": 12.972, "lon": 77.594, "offsetSec": 300 },
+        { "name": "TechPark", "lat": 12.976, "lon": 77.6, "offsetSec": 900 }
+      ]
     },
     "R2": {
-      "id":"R2","name":"Railway → Airport",
-      "path":[[12.965,77.585],[12.970,77.590],[12.980,77.605]],
-      "stops":[{"name":"Railway","lat":12.965,"lon":77.585,"offsetSec":0},{"name":"Airport","lat":12.980,"lon":77.605,"offsetSec":1200}]
+      "id": "R2",
+      "name": "Railway → Airport",
+      "path": [
+        [12.965, 77.585],
+        [12.97, 77.59],
+        [12.98, 77.605]
+      ],
+      "stops": [
+        { "name": "Railway", "lat": 12.965, "lon": 77.585, "offsetSec": 0 },
+        { "name": "Airport", "lat": 12.98, "lon": 77.605, "offsetSec": 1200 }
+      ]
     }
   },
-  "bus_assignments": {"BUS_101":{"routeId":"R1","startTime":1690000000000},"BUS_202":{"routeId":"R2","startTime":1690000000000}}
+  "bus_assignments": {
+    "BUS_101": { "routeId": "R1", "startTime": 1690000000000 },
+    "BUS_202": { "routeId": "R2", "startTime": 1690000000000 }
+  }
 }
