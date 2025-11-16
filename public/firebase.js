@@ -2,6 +2,8 @@
   // Import the functions you need from the SDKs you need
 
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+  import { getDatabase, ref, set, update, push, onValue, get, child } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
   // TODO: Add SDKs for Firebase products that you want to use
   // https://firebase.google.com/docs/web/setup#available-libraries
@@ -18,5 +20,8 @@
   };
 
   // Initialize Firebase
-    const app = initializeApp(firebaseConfig);  
-    export default app;
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const auth = getAuth(app);
+
+  window.fb = { app, db, auth, ref, set, update, push, onValue, get, child, signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword };

@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Admin Panel</title></head>
+<body>
+  <h2>Admin (Firebase Auth required)</h2>
+  <div id="auth">
+    <input id="email" placeholder="email"><input id="pass" placeholder="password" type="password">
+    <button id="login">Login</button><button id="logout">Logout</button>
+  </div>
+
+  <div id="panel" style="display:none">
+    <h3>Create Route</h3>
+    <textarea id="routePath" placeholder="Enter path as lat,lng; lat,lng ..."></textarea><br>
+    <input id="routeName" placeholder="Route name"><br>
+    <button id="createRoute">Create Route</button>
+
+    <h3>Assign Bus</h3>
+    <input id="assignBusId" placeholder="BUS_101"><input id="assignRouteId" placeholder="R1">
+    <button id="assignBtn">Assign</button>
+  </div>
+
+  <script type="module" src="/firebase.js"></script>
+  <script>
+    const { auth, signInWithEmailAndPassword, onAuthStateChanged, signOut, db, ref, push, set } = window.fb;
+
+    document.getElementById('login').onclick = ()=>{
+      const e = document.getElementById('email').value, p = document.getElementById('pass').value;
+      signInWithEmailAndPassword(auth,e,p).catch(err=>alert(err.message));
+    };
+    document.getElementById('logout').onclick = ()=> signOut(auth);
+
+    onAuthStateChanged(auth,user=>{
+      if(user){ document.getElementById('panel').style.display='block'; }
+      else document.getElementById('panel').style.display='none';
+    });
+
+    document.getElementById('createRoute').onclick = ()=>{
+      const pathText = document.getElementById('routePath').value.trim();
+      const name = document.getElementById('routeName').value.trim();
+      if(!pathText||!name) return alert('fill both');
+      const path = pathText.split(';').map(s=>{
+        const [lat,lng]= s.split(',').map(x=>parseFloat(x.trim())); return [lat,lng];
+      });
+      const rRef = push(ref(db,'routes'));
+      set(rRef,{name, path, stops:[]}).then(()=>alert('route created'));
+    };
+
+    document.getElementById('assignBtn').onclick = ()=>{
+      const bus = document.getElementById('assignBusId').value.trim();
+      const r = document.getElementById('assignRouteId').value.trim();
+      if(!bus||!r) return alert('fill bus and route id');
+      set(ref(db,`bus_assignments/${bus}`), {routeId:r, startTime: Date.now()}).then(()=>alert('assigned'));
+    };
+  </script>
+</body>
+</html>

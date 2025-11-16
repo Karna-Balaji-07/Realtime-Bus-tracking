@@ -1,39 +1,149 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
-  <title>Live Bus Tracking</title>
+  <meta charset="utf-8" />
+  <title>Live Bus Map</title>
+  <link rel="stylesheet" href="./assets/style.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
-    #map { height: 100vh; }
+    body,html {height:100%; margin:0; font-family:Inter,Arial;}
+    #map {height:100vh;}
+    .topbar {position:absolute; left:10px; top:10px; z-index:999; background:#fff; padding:10px 12px; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.15);}
+    .topbar input {padding:8px; width:260px;}
+    .bus-card {background: rgba(255,255,255,0.95); padding:8px; border-radius:8px; margin-bottom:6px;}
   </style>
 </head>
 <body>
+  <div class="topbar">
+    <input id="search" placeholder="Search by bus id / route / stop..." />
+    <button onclick="toFind()">Find Bus</button>
+    <div id="status" style="margin-top:6px;font-size:13px;color:#444">Connecting...</div>
+  </div>
+
   <div id="map"></div>
 
+  <script type="module" src="./firebase.js"></script>
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script type="module" src="../firebase.js"></script>
 
   <script>
-    const map = L.map("map").setView([20.5937, 78.9629], 5);
+  // Globals
+  const { db, ref, onValue, get, child } = window.fb;
+  const map = L.map('map').setView([12.9716,77.5946],13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+  const markers = {};
+  const routeLayers = {};
+  let routes = {};
+  let assignments = {};
 
-    const busMarkers = {};
+  // Load routes once and keep
+  onValue(ref(db,'routes'), snap=>{
+    routes = snap.val() || {};
+    // draw all routes polylines
+    for(const rId in routes){
+      if(routeLayers[rId]) routeLayers[rId].remove();
+      const poly = L.polyline(routes[rId].path, {weight:4,opacity:0.6}).addTo(map);
+      routeLayers[rId] = poly;
+    }
+  });
 
-    window.dbOn(window.dbRef(window.db, "buses"), snapshot => {
-      const buses = snapshot.val();
+  onValue(ref(db,'bus_assignments'), snap=>{
+    assignments = snap.val() || {};
+  });
 
-      for (let id in buses) {
-        const bus = buses[id];
+  // Realtime buses
+  onValue(ref(db,'buses'), snap=>{
+    document.getElementById('status').innerText = 'Live: ' + new Date().toLocaleTimeString();
+    const data = snap.val() || {};
+    for(const id in data){
+      const b = data[id];
+      if(!markers[id]){
+        markers[id] = L.marker([b.lat,b.lon]).addTo(map).bindPopup(`<div class="bus-card"><b>${id}</b><div id="eta-${id}">ETA: --</div></div>`);
+      } else {
+        markers[id].setLatLng([b.lat,b.lon]);
+      }
+      // compute ETA
+      computeETA(id,b);
+    }
+  });
 
-        if (!busMarkers[id]) {
-          busMarkers[id] = L.marker([bus.lat, bus.lon]).addTo(map)
-            .bindPopup(`Bus: ${id}`);
-        } else {
-          busMarkers[id].setLatLng([bus.lat, bus.lon]);
+  function computeETA(busId, busObj){
+    const assign = assignments[busId];
+    if(!assign){ updatePopup(busId,'No route assigned'); return; }
+    const route = routes[assign.routeId];
+    if(!route){ updatePopup(busId,'Route not found'); return; }
+
+    // crude ETA: find nearest future stop and use offsetSec
+    const stops = route.stops || [];
+    if(stops.length === 0){ updatePopup(busId,'No stops'); return; }
+
+    // compute distance to each stop (meters) and pick the nearest ahead one
+    const dists = stops.map(s => ({...s, d: haversine(busObj.lat,busObj.lon,s.lat,s.lon)}));
+    dists.sort((a,b)=>a.d-b.d);
+
+    const nearest = dists[0];
+    // estimate time = distance / (speed m/s). If speed missing use 10 km/h -> 2.78 m/s
+    const speedMs = (busObj.speed && busObj.speed > 0) ? busObj.speed * 1000/3600 : 2.78;
+    const secsToStop = Math.round(nearest.d / Math.max(speedMs,0.5));
+    const etaDate = new Date(Date.now() + secsToStop*1000);
+    updatePopup(busId, `Nearest stop: ${nearest.name} (${Math.round(nearest.d)}m). ETA: ${etaDate.toLocaleTimeString()}`);
+  }
+
+  function updatePopup(busId, text){
+    const m = markers[busId];
+    if(m){
+      m.getPopup().setContent(`<div class="bus-card"><b>${busId}</b><div id="eta-${busId}">${text}</div></div>`);
+    }
+  }
+
+  function haversine(lat1,lon1,lat2,lon2){
+    const R = 6371000;
+    const toRad = v => v*Math.PI/180;
+    const dLat = toRad(lat2-lat1), dLon = toRad(lon2-lon1);
+    const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2)) * Math.sin(dLon/2)**2;
+    const c = 2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+    return R*c; // meters
+  }
+
+  // search helper
+  document.getElementById('search').addEventListener('keyup', e=>{
+    const q = e.target.value.toLowerCase();
+    if(!q) return;
+    // simple: if matches bus id -> open track.html with bus param
+    // if matches route name -> zoom to polyline
+    // else look for stop matches
+    // we'll check buses and routes
+    // fetch current database snapshot
+    get(child(ref(db),'buses')).then(s=> {
+      const bs = s.val() || {};
+      for(const id in bs){
+        if(id.toLowerCase().includes(q)){
+          window.location.href = '/track.html?bus=' + id;
+          return;
         }
       }
+      // route search
+      get(child(ref(db),'routes')).then(rs=>{
+        const routesSnap = rs.val() || {};
+        for(const rId in routesSnap){
+          if(routesSnap[rId].name && routesSnap[rId].name.toLowerCase().includes(q)){
+            map.fitBounds(routeLayers[rId].getBounds());
+            return;
+          }
+          // stops
+          const stops = routesSnap[rId].stops || [];
+          for(const sst of stops){
+            if(sst.name.toLowerCase().includes(q)){
+              map.setView([sst.lat,sst.lon],16);
+              return;
+            }
+          }
+        }
+      });
     });
+  });
+
+  function toFind(){ window.location.href = '/find-bus.html'; }
   </script>
 </body>
 </html>
