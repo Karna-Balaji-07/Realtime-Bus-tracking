@@ -29,9 +29,16 @@
       const email = document.getElementById("signup-email").value;
       const password = document.getElementById("signup-password").value;
       createUserWithEmailAndPassword(auth, email, password)
-        .then(() => {window.location.href = "./admin-dashboard.html";})
-        .catch(err => alert("Error: " + err.message));
+        .then((userCredential) => {
+        console.log("Signup successful:", userCredential.user);
+        window.location.href = "./admin-dashboard.html"; // ✅ Adjust path if needed
+      })
+      .catch(err => {
+        console.error("Signup error:", err);
+        alert("Error: " + err.message);
+      });
     };
+
   </script>
 </body>
 </html>
