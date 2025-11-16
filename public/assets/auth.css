@@ -1,73 +1,125 @@
+/* Background: animated gradient + floating particles */
 body {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Poppins", sans-serif;
   background: linear-gradient(135deg, #1f1c2c, #928dab);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Glassmorphism container */
+.auth-container {
+  width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100vh;
+  padding: 20px;
 }
 
 .auth-card {
-  background: rgba(255, 255, 255, 0.1);
+  width: 360px;
+  padding: 2.5rem;
+  background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(15px);
-  border-radius: 20px;
-  padding: 2rem;
-  width: 350px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  border-radius: 22px;
+  box-shadow: 0 8px 35px rgba(0, 0, 0, 0.35);
   color: #fff;
-  text-align: center;
+  animation: fadeIn 1s ease-out;
 }
 
+/* Title styling */
+.title {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  letter-spacing: 2px;
+  text-shadow: 0px 0px 12px rgba(255, 255, 255, 0.3);
+}
+
+/* Input fields */
 .input-group {
   position: relative;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .input-group input {
   width: 100%;
-  padding: 1rem;
+  padding: 12px 0;
   background: transparent;
   border: none;
   border-bottom: 2px solid #fff;
-  color: #fff;
   font-size: 1rem;
+  color: #fff;
   outline: none;
+  transition: 0.3s;
+}
+
+.input-group input:focus {
+  border-bottom-color: #00e6e6;
 }
 
 .input-group label {
   position: absolute;
-  top: 1rem;
   left: 0;
-  color: #ccc;
+  top: 12px;
+  color: #bbb;
+  transition: 0.3s;
   pointer-events: none;
-  transition: 0.3s ease;
 }
 
 .input-group input:focus + label,
 .input-group input:not(:placeholder-shown) + label {
-  top: -0.5rem;
-  font-size: 0.8rem;
+  top: -10px;
+  font-size: 0.85rem;
   color: #00e6e6;
 }
 
-.btn-group {
-  display: flex;
-  justify-content: center;
-}
-
+/* Buttons */
 .btn {
-  width: 150px;
-  padding: 0.6rem;
-  background: #00e6e6;
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
   border: none;
   border-radius: 10px;
+  background: #00e6e6;
   color: #000;
   font-weight: bold;
+  font-size: 1rem;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: 0.3s;
+  box-shadow: 0 0 12px rgba(0, 230, 230, 0.6);
 }
 
 .btn:hover {
   background: #00cccc;
+  box-shadow: 0 0 15px rgba(0, 230, 230, 1);
+}
+
+/* Switch link */
+.switch-text {
+  margin-top: 15px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.switch-text a {
+  color: #00e6e6;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 420px) {
+  .auth-card {
+    width: 90%;
+    padding: 2rem;
+  }
 }
