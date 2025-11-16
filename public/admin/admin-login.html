@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login</title>
+  <link rel="stylesheet" href="../assets/auth.css" />
+</head>
+<body>
+  <div class="auth-card">
+    <h2>Login</h2>
+    <div class="input-group">
+      <input type="email" id="login-email" placeholder=" " required />
+      <label for="login-email">Email</label>
+    </div>
+    <div class="input-group">
+      <input type="password" id="login-password" placeholder=" " required />
+      <label for="login-password">Password</label>
+    </div>
+    <div class="btn-group">
+      <button class="btn" onclick="login()">Login</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { auth } from '../firebase.js';
+    import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
+
+    window.login = () => {
+      const email = document.getElementById("login-email").value;
+      const password = document.getElementById("login-password").value;
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {window.location.href = "./admin-dashboard.html";})
+        .catch(err => alert("Error: " + err.message));
+    };
+  </script>
+</body>
+</html>
