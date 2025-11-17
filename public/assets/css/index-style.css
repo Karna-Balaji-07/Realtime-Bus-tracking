@@ -404,3 +404,22 @@ border-left: 10%;
     gap: 8px;
   }
 }
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  background: rgba(0, 255, 213, 0.2);
+  color: #00ffd5;
+  transform: scale(1.05);
+}
+
+

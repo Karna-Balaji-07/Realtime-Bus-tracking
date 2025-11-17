@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Profile</title>
+  <link rel="stylesheet" href="./assets/css/profile_signup.css" />
+</head>
+<body>
+  <div class="profile-container glass">
+    <img src="./assets/images/profile_default.jpg" alt="Profile Picture" class="profile-pic" />
+    <div class="profile-info">
+      <h2 id="displayName">User Name</h2>
+      <p id="displayEmail">Email</p>
+      <a href="index.html" class="btn">← Back to Home</a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('displayName').textContent = localStorage.getItem('userName') || 'Guest';
+    document.getElementById('displayEmail').textContent = localStorage.getItem('userEmail') || 'Not signed in';
+  </script>
+</body>
+</html>
