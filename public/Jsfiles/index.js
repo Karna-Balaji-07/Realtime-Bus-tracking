@@ -196,7 +196,7 @@ document.getElementById("aboutBtn").addEventListener("click", () => {
 document.getElementById("profilePic").addEventListener("click", () => {
   const name = prompt(
     "Enter display name (stored locally):",
-    profileNameEl.textContent || "Guest User"
+    profileNameEl.textContent || "Mahesh"
   );
   if (name) {
     localStorage.setItem("mb_username", name);

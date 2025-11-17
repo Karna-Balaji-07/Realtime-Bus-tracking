@@ -130,3 +130,33 @@ input[type="submit"] {
   margin-bottom: 1.5rem;
   color: #ccc;
 }
+
+.profile-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+  width: 100%;
+}
+
+.logout-btn {
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+.logout-btn:hover {
+  background: rgba(255, 0, 0, 0.2);
+  color: #ff4d4d;
+  box-shadow: 0 6px 16px rgba(255, 0, 0, 0.3);
+}
+
+.back-btn {
+  background: rgba(0, 255, 213, 0.1);
+  border: 1px solid rgba(0, 255, 213, 0.3);
+}
+
+.back-btn:hover {
+  background: rgba(0, 255, 213, 0.2);
+  color: #00ffd5;
+  box-shadow: 0 6px 16px rgba(0, 255, 213, 0.3);
+}
