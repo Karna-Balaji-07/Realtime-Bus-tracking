@@ -1,151 +1,117 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Find Bus</title>
-<link rel="stylesheet" href="./assets/css/busDetails.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kochi Bus Tracker</title>
+<link rel="stylesheet" href="style.css" />
+
 </head>
-
 <body>
-<div class="app">
 
-  <!-- SIDEBAR -->
-  <aside class="side">
+ <header class="site-header">
+  <div class="container header-inner">
 
-    <!-- Branding -->
+    <!-- BRAND -->
     <div class="brand">
-      <div class="logo">BT</div>
-      <div>
-        <div class="h1">BusTracker</div>
-        <div class="h2">Find buses • Live status</div>
-      </div>
+      <img src="./assets/images/logo.png" alt="logo" class="logo" />
+      <span class="brand-title">MyBus</span>
     </div>
 
-    <!-- Search Panel -->
-    <div class="card">
-      <div style="font-weight:700">Search</div>
+    <!-- NAVIGATION --> 
+    <nav class="top-nav">
+      <a class="nav-btn link" href="./find-bus.html">Find Bus</a>
+      <a class="nav-btn link" href="./about.html">About Us</a>
+      <a class="nav-btn link" href="./signup.html">Sign Up</a>
+    </nav>
 
-      <div class="form">
+    <!-- PROFILE -->
+    <div class="profile">
+      <img
+        id="profilePic"
+        src="./assets/images/profile_default.jpg"
+        alt="profile"
+        class="profile-pic"
+      />
+      <a href="./profile.html" class="btn" id="profileName">Profile</a>
+    </div>
 
-        <input id="qRoute" class="input" placeholder="Route or bus name (e.g. 23A, Airport Express)">
+  </div>
+</header>
 
-        <!-- From / To Row Fix (Aligned Correctly) -->
-        <div class="row row-2inputs">
-          <input id="qFrom" class="input" placeholder="From (stop or city)">
-          <input id="qTo" class="input" placeholder="To (stop or city)">
+
+  <section class="hero">
+    <h1 class="hero-title">Find Your Bus Faster</h1>
+    <p class="hero-sub">Smart and simple bus route finder</p>
+  </section>
+
+  <section class="search-section container">
+    <div class="card search-card">
+      <h3>Search Route</h3>
+
+      <label class="field">
+        <span>Source Stop</span>
+        <input id="sourceInput" autocomplete="off" placeholder="Type source..." />
+      </label>
+      <div id="sourceSuggestions" class="suggestions hidden"></div>
+      <div id="selectedSource" class="selected-info"></div>
+
+      <label class="field">
+        <span>Destination Stop</span>
+        <input id="destInput" autocomplete="off" placeholder="Type destination (optional)..." />
+      </label>
+      <div id="destSuggestions" class="suggestions hidden"></div>
+      <div id="selectedDest" class="selected-info"></div>
+
+      <button id="findTripsBtn" class="btn-accent full-btn">Find Trips</button>
+
+      <div id="routesInfo" class="routes-info"></div>
+    </div>
+  </section>
+
+  <section class="sim-section container">
+    <div id="simPanel" class="sim-card hidden">
+
+      <div class="sim-header">
+        <div class="sim-route"><strong id="routeTitle"></strong> — <span id="tripId"></span></div>
+        <div class="sim-right small-info">Status: <span id="statusText">—</span></div>
+      </div>
+
+      <div class="sim-body">
+
+        <!-- LEFT: Track -->
+        <div class="track-column">
+          <div class="track-wrapper">
+            <div id="lineView" class="line-view-vertical"></div>
+          </div>
         </div>
 
-        <!-- Type + Operator -->
-        <div class="row row-2inputs">
-          <select id="qType" class="select">
-            <option value="">All types</option>
-            <option value="AC">AC</option>
-            <option value="Non-AC">Non-AC</option>
-            <option value="Mini">Mini</option>
-          </select>
-
-          <input id="qCompany" class="input" placeholder="Operator">
+        <!-- RIGHT: Info panel (TOP-ALIGNED) -->
+        <div class="details-panel" id="infoPanel">
+          <div class="info-row">
+            <div class="info-label">Route</div>
+            <div id="infoRoute" class="info-value">—</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">Previous stop</div>
+            <div id="infoPrev" class="info-value">—</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">Next stop</div>
+            <div id="infoNext" class="info-value">—</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">ETA</div>
+            <div id="infoEta" class="info-value">—</div>
+          </div>
         </div>
 
-        <div class="row" style="gap:8px">
-          <button class="btn" onclick="applyFilters()">Apply</button>
-          <button class="btn" onclick="resetFilters()">Reset</button>
-        </div>
-
-        <div class="small">Tip: Click 'Track' to open the track page for a bus.</div>
       </div>
     </div>
+  </section>
 
-    <!-- Sample Actions Panel -->
-    <div class="card">
-      <div style="font-weight:700;margin-bottom:8px">Sample actions</div>
-
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <button class="btn" onclick="bootstrapFindBus()">Load buses from Firebase</button>
-        <button class="btn" onclick="console.log('Open console to run pushSampleData(sample)')">
-          Developer: push sample
-        </button>
-      </div>
-    </div>
-
-    <!-- JSON Samples -->
-    <div class="small">Included JSON samples:</div>
-    <pre class="json-preview">
-{
-  "bus_routes.json": [
-    {
-      "route_id": "r10831516",
-      "agency_id": "Mofussil Kochi bus",
-      "route_long_name": "High Court — Nedungad (via Vypin)",
-      "route_type": "3"
-    }
-  ]
-}
-    </pre>
-
-  </aside>
-
-  <!-- MAIN CONTENT -->
-  <main class="content">
-
-    <div class="topbar">
-      <div>
-        <div style="font-size:20px;font-weight:800">Find a Bus</div>
-        <div class="small">Browse live buses from Firebase Realtime Database</div>
-      </div>
-
-      <div class="searchbar">
-        <input id="globalSearch" class="input" placeholder="Quick search (name, route, company)" oninput="filterList()">
-      </div>
-    </div>
-
-    <!-- Bus Listing -->
-    <div id="busesList" class="list card">
-      <div class="small">Click 'Load buses from Firebase' to fetch data.</div>
-    </div>
-
-  </main>
-</div>
-
-<!-- JAVASCRIPT -->
-<script src="./Jsfiles/busDetails.js"></script>
-
-<script>
-function applyFilters(){
-  const qRoute = q('qRoute');
-  const qFrom = q('qFrom');
-  const qTo = q('qTo');
-  const qType = q('qType');
-  const qCompany = q('qCompany');
-
-  document.querySelectorAll('#busesList .item').forEach(item => {
-    const t = item.textContent.toLowerCase();
-    const match =
-      (!qRoute || t.includes(qRoute)) &&
-      (!qFrom || t.includes(qFrom)) &&
-      (!qTo || t.includes(qTo)) &&
-      (!qType || t.includes(qType)) &&
-      (!qCompany || t.includes(qCompany));
-
-    item.style.display = match ? "" : "none";
-  });
-}
-
-function resetFilters(){
-  ["qRoute","qFrom","qTo","qType","qCompany"].forEach(id => document.getElementById(id).value = "");
-  applyFilters();
-}
-
-function filterList(){
-  const v = q('globalSearch');
-  document.querySelectorAll('#busesList .item').forEach(item=>{
-    item.style.display = v ? (item.textContent.toLowerCase().includes(v) ? "" : "none") : "";
-  });
-}
-
-function q(id){ return document.getElementById(id).value.toLowerCase(); }
-</script>
+  <footer class="site-footer container">Kochi Bus Tracker © 2025</footer>
+<script src="app.js"></script>
 
 </body>
 </html>
