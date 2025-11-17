@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Track Bus</title>
+<link rel="stylesheet" href="./assets/css/busDetails.css">
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <div class="logo">BT</div>
+      <div>
+        <div class="h1">BusTracker</div>
+        <div class="h2">Track • Live positions</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="font-weight:700">Open bus</div>
+      <div class="form">
+        <input id="busIdInput" class="input" placeholder="Enter bus id (or use ?bus=ID)">
+        <div style="display:flex;gap:8px">
+          <button class="btn" onclick="gotoBus()">Open</button>
+          <a class="btn" href="findbus.html">Find Bus</a>
+        </div>
+        <div class="small">You can also open this page with ?bus=BUS_ID</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="font-weight:700">Track actions</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+        <button class="btn" onclick="refreshTrack()">Refresh</button>
+        <button class="btn" onclick="console.log('Realtime listeners can be added via db.ref(...).on(\'value\',...)')">Realtime demo</button>
+      </div>
+    </div>
+
+    <div class="small">Sample JSONs from upload:</div>
+    <pre style="max-height:220px;overflow:auto;background:transparent;border-radius:8px;padding:8px;border:1px solid rgba(255,255,255,0.03)">{
+  "New folder/bus_routes.json": [
+    {
+      "route_id": "r10831516",
+      "agency_id": "Mofussil Kochi bus",
+      "route_short_name": "",
+      "route_long_name": "High Court \u00e2\u2020\u201d Nedungad (via Vypin)",
+      "route_desc": "",
+      "route_type": "3",
+      "route_url": "https://jungle-bus.github.io/unroll/route.html?name_l10n=ml&line=10831516",
+      "route_color": "0000ff",
+      "route_text_color": "ffffff"
+    },
+    {
+      "route_id": "r10831517",
+      "agency_id": "Mofussil Kochi bus",
+      "route_short_name": "",
+      "route_long_name": "Manjanakad \u00e2\u2020\u201d High Court",
+      "route_desc": "",
+      "route_type": "3",
+      "route_url": "https://jungle-bus.github.io/unroll/route.html?name_l10n=ml&line=10831517",
+      "route_color": "0000ff",
+      "route_text_color": "ffffff"
+    },
+    {
+      "route_id": "r10831518",
+      "agency_id": "Mofussil Kochi bus",
+      "route_short_name": "",
+      "route_long_name": "North Paravur \u00e2\u2020\u201d High Court (via Vypin)",
+      "route_desc": "",
+      "route_type": "3",
+      "route_url": "https://jungle-bus.github.io/unroll/route.html?name_l10n=ml&line=10831518",
+      "route_color": "0000f</pre>
+    }
+  </aside>
+
+  <main class="content">
+    <div class="topbar">
+      <div>
+        <div style="font-size:20px;font-weight:800">Track Bus</div>
+        <div class="small">Live positions, history and metadata</div>
+      </div>
+      <div class="searchbar">
+        <div class="small">Status: <span id="statusBadge" class="badge">idle</span></div>
+      </div>
+    </div>
+
+    <div id="trackPanel" class="card">
+      <div id="trackInfo" style="min-height:72px"></div>
+      <div id="mapPlaceholder" class="map">Map placeholder — replace with Leaflet/Mapbox if desired</div>
+    </div>
+
+  </main>
+</div>
+
+<script src="./Jsfiles/busDetails.js"></script>
+<script>
+function gotoBus(){
+  const id = document.getElementById('busIdInput').value.trim();
+  if(!id) return alert('Enter bus id');
+  loadTrackFor(id);
+}
+function refreshTrack(){
+  const q = new URL(window.location.href).searchParams.get('bus');
+  if(q) loadTrackFor(q);
+  else alert('No bus specified. Enter bus id or open with ?bus=ID');
+}
+// bootstrap on load
+(function(){
+  const params = new URL(window.location.href).searchParams;
+  const bus = params.get('bus');
+  if(bus) document.getElementById('busIdInput').value = bus;
+  bootstrapTrack();
+})();
+</script>
+</body>
+</html>
